@@ -37,6 +37,7 @@ function initialize() {
     turn = 1;
     winner = null;
     render();
+    handleClick();
 }
 
 function render() {
@@ -54,11 +55,11 @@ function render() {
 
 function renderBoard() {
     // Render the board
-    board.forEach(function(cellArr, cellIdx) {
-    cellArr.forEach(function(cell, cellIdx) {
-        const div = document.getElementById(`c${cellIdx}r${cellIdx}`);
-        div.style.innerHTML = players[turn];
-    });
+    board.forEach(function(boardCells, colNum) {
+        boardCells.forEach(function(cell, rowNum) {
+            const div = document.getElementById(`c${colNum}r${rowNum}`);
+            div.style.backgroundColor = players[cell];
+        })
     });
 }
 
