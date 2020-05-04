@@ -1,9 +1,10 @@
 /*----- constants -----*/
-const playerLookup = {
+const players = {
     '1': 'X',
     '-1': 'O',
     'null': 'transparent',
 };
+
 
 /*----- app's state (variables) -----*/
 let board;
@@ -21,12 +22,13 @@ const msgElement = document.getElementById('message');
 document.getElementById('board')
     .addEventListener('click', handleClick);
 
-document.getElementById('resetButton').addEventListener('click', init);
+document.getElementById('resetButton').addEventListener('click', initialize);
+
 
 /*----- functions -----*/
-init();
+initialize();
 
-function init() {
+function initialize() {
     board = [
         [null, null, null], // column 0
         [null, null, null], // column 1
@@ -43,35 +45,32 @@ function render() {
         if (winner === 'T') {
           msgElement.innerHTML = "It's a Tie!";
         } else {
-          msgElement.innerHTML = `<span>${playerLookup[turn].toUpperCase()}</span> Wins!`;
+          msgElement.innerHTML = `<span>${players[turn].toUpperCase()}</span> Wins!`;
         }
       } else {
-        msgElement.innerHTML = `<span>${playerLookup[turn].toUpperCase()}'s</span> Turn`;
+        msgElement.innerHTML = `<span>${players[turn].toUpperCase()}'s</span> Turn`;
       }
     }
 
 function renderBoard() {
     // Render the board
-    board.forEach(function(colArr, colIdx) {
-    colArr.forEach(function(cell, rowIdx) {
-        // if (!colArr.includes(null)) markerElements[colIdx].style.visibility = 'hidden';
-        const div = document.getElementById(`c${colIdx}r${rowIdx}`);
-        div.style.innerHTML = playerLookup[cell];
+    board.forEach(function(cellArr, cellIdx) {
+    cellArr.forEach(function(cell, cellIdx) {
+        const div = document.getElementById(`c${cellIdx}r${cellIdx}`);
+        div.style.innerHTML = players[turn];
     });
     });
 }
 
 function handleClick(event) {
-    // get column index (colIdx) of clicked marker
-    const colIdx = boardCells.indexOf(event.target);
-    // ensure actual column marker was clicked and that the game isn't over
-    if (colIdx === -1 || winner) return; 
-    // check that column is not full - get index of first null in column array
-    const colArr = board[colIdx];
-    const rowIdx = colArr.indexOf(null);
-    if (rowIdx === -1) return; 
+    const cellIdx = boardCells.indexOf(event.target);
+    // check that a cell was clicked and the game isn't over
+    if (cellIdx === -1 || winner) return; 
+    // check that cell is not full - get index of first null in column array
+    const cellArr = board[cellIdx];
+    if (cellIdx === -1) return; 
     // update the board's column
-    colArr[rowIdx] = turn;
+    boardCells[cellIdx] = turn;
     // calculate winner 
     getWinner();
 
@@ -92,13 +91,13 @@ function checkCol(colIdx) {
     const colArr = board[colIdx];
     for (let rowIdx = 0; rowIdx < colArr.length; rowIdx++) {
         if (colArr[rowIdx] === null) break;
-        if (rowIdx < 3) winner = checkUp(colArr, rowIdx);
+        if (rowIdx < 2) winner = checkUp(colArr, rowIdx);
         if (winner) break; 
     }
 }
 
 function checkUp(colArr, rowIdx) {
-    if (Math.abs(colArr[rowIdx] + colArr[rowIdx +1] + colArr[rowIdx + 2] + colArr[rowIdx + 3]) ===4) {
+    if (Math.abs(colArr[rowIdx] + colArr[rowIdx +1] + colArr[rowIdx + 2]) === 3) {
         return colArr[rowIdx];
     } else {
         return null;
