@@ -1,0 +1,30 @@
+* {
+    box-sizing: border-box;
+    text-align: center;
+}
+
+body {
+    font-family: 'Indie Flower', cursive;
+}
+
+#board {
+    display: grid;
+    grid-template-columns: repeat(3, 15vmin);
+    grid-template-rows: repeat(3, 15vmin);
+    gap: 2vmin;
+    width: fit-content;
+    margin: 0 auto;
+  }
+
+#board div {
+    border-radius: 0%;
+    border: 1px solid black;
+    display: block;
+  }
+
+#resetButton {
+    font-size: 16px;
+    font-weight: bold;
+    padding: 5px 10px;
+    margin-top: 25px;
+}
