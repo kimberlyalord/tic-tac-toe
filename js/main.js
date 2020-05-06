@@ -2,7 +2,7 @@
 const players = {
     '1': 'X',
     '-1': 'O',
-    'null': 'transparent',
+    'null': null,
 };
 
 
@@ -29,15 +29,10 @@ document.getElementById('resetButton').addEventListener('click', initialize);
 initialize();
 
 function initialize() {
-    board = [
-        [null, null, null], // column 0
-        [null, null, null], // column 1
-        [null, null, null], // column 2
-    ];
+    board = [null, null, null, null, null, null, null, null, null]; // column 2
     turn = 1;
     winner = null;
     render();
-    handleClick();
 }
 
 function render() {
@@ -55,23 +50,20 @@ function render() {
 
 function renderBoard() {
     // Render the board
-    board.forEach(function(boardCells, colNum) {
-        boardCells.forEach(function(cell, rowNum) {
-            const div = document.getElementById(`c${colNum}r${rowNum}`);
-            div.style.backgroundColor = players[cell];
-        })
+    board.forEach(function(cell, idx) {
+            const div = document.getElementById(`c${idx}`);
+            div.innerText = players[cell];
     });
 }
 
 function handleClick(event) {
     const cellIdx = boardCells.indexOf(event.target);
+    console.log(cellIdx);
     // check that a cell was clicked and the game isn't over
     if (cellIdx === -1 || winner) return; 
     // check that cell is not full - get index of first null in column array
-    const cellArr = board[cellIdx];
-    if (cellIdx === -1) return; 
     // update the board's column
-    boardCells[cellIdx] = turn;
+    board[cellIdx] = turn;
     // calculate winner 
     getWinner();
 
@@ -82,25 +74,24 @@ function handleClick(event) {
 
 function getWinner() {
     // iterate through all col arrays until a winner 
-    for (let colIdx = 0; colIdx < board.length; colIdx++) {
-        checkCol(colIdx);
+    for (let cellIdx = 0; cellIdx < board.length; cellIdx++) {
+        checkForWinner(cellIdx);
         if (winner) break;
     }
 }
 
-function checkCol(colIdx) {
-    const colArr = board[colIdx];
-    for (let rowIdx = 0; rowIdx < colArr.length; rowIdx++) {
-        if (colArr[rowIdx] === null) break;
-        if (rowIdx < 2) winner = checkUp(colArr, rowIdx);
-        if (winner) break; 
+function checkForWinner(cellIdx) {
+    if (Math.abs(board[0] + board[1] + board[2]) === 3) {
+        return winner;
+    } else {
+        return null;
     }
 }
 
-function checkUp(colArr, rowIdx) {
-    if (Math.abs(colArr[rowIdx] + colArr[rowIdx +1] + colArr[rowIdx + 2]) === 3) {
-        return colArr[rowIdx];
-    } else {
-        return null;
-    };
-}
+// function checkUp(colArr, rowIdx) {
+//     if (Math.abs(colArr[rowIdx] + colArr[rowIdx +1] + colArr[rowIdx + 2]) === 3) {
+//         return colArr[rowIdx];
+//     } else {
+//         return null;
+//     };
+// }
